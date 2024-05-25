@@ -18,10 +18,10 @@ export default function App() {
 			<StyledText className='text-3xl font-popblack'>Aora</StyledText>
 			<StatusBar style='auto' />
 			<Link
-				href='/profile'
+				href='/home'
 				style={{ color: 'blue' }}
 			>
-				Go to Profile
+				Go to Home
 			</Link>
 		</StyledView>
 	);
