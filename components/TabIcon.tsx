@@ -11,7 +11,7 @@ const TabIcon = ({
 	focused,
 	icon,
 	name,
-}: TabIcon) => {
+}: TabIconProps) => {
 	return (
 		<StyledView className='items-center justify-center gap-2'>
 			<StyledImage
