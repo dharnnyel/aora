@@ -27,3 +27,9 @@ declare type FormFieldProps = {
 	placeholder?: string;
 	placeholderTextColor?: string;
 };
+
+declare type FormState = {
+	email: string;
+	password: string;
+	username: string;
+};
