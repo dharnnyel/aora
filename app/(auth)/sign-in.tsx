@@ -6,20 +6,38 @@ import {
 	StyledView,
 } from '@/StyledComponents';
 import { Button, FormField, Logo } from '@/components';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
+import { Alert } from 'react-native';
+import { signIn } from '@/lib/appwrite';
 
 type Props = {};
 
 const SignIn = (props: Props) => {
-	const [form, setForm] = useState({
+	const [form, setForm] = useState<FormState>({
 		email: '',
 		password: '',
 	});
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const submit = () => {
-		console.log('Form Submitted');
+	const submit = async () => {
+		if (!form.password || !form.email) {
+			Alert.alert('Error', 'Please fill in all the fields');
+		}
+
+		setIsSubmitting(true);
+
+		try {
+			await signIn(form);
+
+			// TODO: SET THE USER TO GLOBAL STATE TO REMAIN LOGGED IN WHEN THE EXIT THE APP
+
+			router.replace('/home');
+		} catch (error) {
+			console.log('Error: ', (error as Error).message);
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -52,10 +70,12 @@ const SignIn = (props: Props) => {
 								})
 							}
 							otherStyles='mt-7'
-            />
-            
-            <StyledText className='text-gray-100 text-right mt-3 font-popregular text-sm'>Forgot password</StyledText>
-            
+						/>
+
+						<StyledText className='text-gray-100 text-right mt-3 font-popregular text-sm'>
+							Forgot password
+						</StyledText>
+
 						<Button
 							title='Login'
 							containerStyles='my-6'

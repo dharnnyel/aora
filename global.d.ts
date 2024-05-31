@@ -31,5 +31,12 @@ declare type FormFieldProps = {
 declare type FormState = {
 	email: string;
 	password: string;
+	username?: string;
+};
+
+declare type User = {
+	accountId: string;
+	email: string;
 	username: string;
+	avatar: string;
 };

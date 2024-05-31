@@ -54,7 +54,7 @@ const SignUp = (props: Props) => {
 
 						<FormField
 							title='Username'
-							value={form.username}
+							value={form.username || ''}
 							handleChangeText={e =>
 								setForm({ ...form, username: e })
 							}

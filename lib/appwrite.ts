@@ -5,6 +5,7 @@ import {
 	Client,
 	Databases,
 	ID,
+	Query,
 } from 'react-native-appwrite';
 
 // Config for local appwrite setup using docker
@@ -40,13 +41,9 @@ const account = new Account(client);
 const avatars = new Avatars(client);
 const databases = new Databases(client);
 
-const isValidEmail = (email: string) => {
-	// Regular expression for a simple email validation
-	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	return emailRegex.test(email);
-};
-
-const createUser = async (form: FormState) => {
+const createUser = async (
+	form: FormState
+): Promise<User> => {
 	try {
 		const { email, password, username } = form;
 
@@ -54,16 +51,15 @@ const createUser = async (form: FormState) => {
 			ID.unique(),
 			email.trim(),
 			password,
-			username.trim()
+			username?.trim()
 		);
 
-		console.log(newAccount.email);
-
-		if (!newAccount) throw Error;
+		if (!newAccount)
+			throw new Error('Account Creation failed');
 
 		const avatarUrl = avatars.getInitials(username);
 
-		await signIn(email, password);
+		await signIn(form);
 
 		const newUser = await databases.createDocument(
 			config.databaseId,
@@ -72,22 +68,30 @@ const createUser = async (form: FormState) => {
 			{
 				accountId: newAccount.$id,
 				email: email.trim(),
-				username: username.trim(),
+				username: username?.trim(),
 				avatar: avatarUrl,
 			}
 		);
-		return newUser;
+		return {
+			accountId: newUser.accountId,
+			email: newUser.email,
+			username: newUser.username,
+			avatar: newUser.avatar,
+		} as User;
+
+		// TODO: Revert to this if the user is not gotten
+		// return newUser;
 	} catch (error: any) {
 		throw new Error(error.message);
 	}
 };
 
-const signIn = async (email: string, password: string) => {
+const signIn = async (formData: FormState) => {
 	try {
 		const session =
 			await account.createEmailPasswordSession(
-				email,
-				password
+				formData.email,
+				formData.password
 			);
 		return session;
 	} catch (error) {
@@ -100,4 +104,22 @@ const signIn = async (email: string, password: string) => {
 	}
 };
 
-export { createUser, signIn };
+const getCurrentUser = async () => {
+	try {
+		const currentAccount = await account.get();
+
+		if (!currentAccount) throw Error;
+
+		const currentUser = await databases.listDocuments(
+			config.databaseId,
+			config.usersCollectionId,
+			[Query.equal('accountId', currentAccount.$id)]
+		);
+
+		if (!currentUser) throw Error;
+
+		return currentUser.documents[0];
+	} catch (error) {}
+};
+
+export { createUser, signIn, getCurrentUser };
