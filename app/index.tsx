@@ -1,7 +1,7 @@
 import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { StatusBar } from 'expo-status-bar';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 
 import {
 	StyledImage,
@@ -14,11 +14,17 @@ import { images } from '@/constants';
 import { Button, Logo } from '@/components';
 import 'react-native-url-polyfill/auto';
 import React from 'react';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+	const { isLoading, isLoggedIn } = useGlobalContext();
+
+	if (!isLoading && isLoggedIn)
+		return <Redirect href='/home' />;
+
 	return (
 		<StyledSafeAreaView className='bg-primary h-full'>
 			<StyledScrollView

@@ -1,14 +1,20 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from 'react-native';
+import React from 'react';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import { StyledText } from '@/StyledComponents';
 
-type Props = {}
+type Props = {};
 
 const Home = (props: Props) => {
-  return (
-    <View>
-      <Text>Home</Text>
-    </View>
-  )
-}
+	const { user } = useGlobalContext();
 
-export default Home
+	return (
+		<View>
+			<StyledText className='text-black-200 font-bold'>
+				
+			</StyledText>
+		</View>
+	);
+};
+
+export default Home;

@@ -37,7 +37,7 @@ client
 	.setProject(config.projectId)
 	.setPlatform(config.platform);
 
-const account = new Account(client);
+export const account = new Account(client);
 const avatars = new Avatars(client);
 const databases = new Databases(client);
 
@@ -47,6 +47,8 @@ const createUser = async (
 	try {
 		const { email, password, username } = form;
 
+		console.log('Creating new Account');
+
 		const newAccount = await account.create(
 			ID.unique(),
 			email.trim(),
@@ -54,12 +56,18 @@ const createUser = async (
 			username?.trim()
 		);
 
+		console.log('New Account created');
+
 		if (!newAccount)
 			throw new Error('Account Creation failed');
 
-		const avatarUrl = avatars.getInitials(username);
+		const avatarUrl = avatars
+			.getInitials(username)
+			.toString();
 
+		console.log('Signing in new user...');
 		await signIn(form);
+		console.log('User signed in');
 
 		const newUser = await databases.createDocument(
 			config.databaseId,
@@ -72,16 +80,17 @@ const createUser = async (
 				avatar: avatarUrl,
 			}
 		);
-		return {
-			accountId: newUser.accountId,
-			email: newUser.email,
-			username: newUser.username,
-			avatar: newUser.avatar,
-		} as User;
 
-		// TODO: Revert to this if the user is not gotten
-		// return newUser;
+		console.log('New user document created:', newUser);
+		return {
+			$id: newUser.$id,
+			accountId: newAccount.$id,
+			email: email.trim(),
+			username: username?.trim(),
+			avatar: avatarUrl,
+		};
 	} catch (error: any) {
+		console.error('Error creating user:', error);
 		throw new Error(error.message);
 	}
 };
@@ -94,21 +103,19 @@ const signIn = async (formData: FormState) => {
 				formData.password
 			);
 		return session;
-	} catch (error) {
-		if (
-			typeof error === 'string' ||
-			typeof error === 'undefined'
-		) {
-			throw new Error(error);
-		}
+	} catch (error: any) {
+		throw new Error(error.message);
 	}
 };
 
-const getCurrentUser = async () => {
+const getCurrentUser = async (): Promise<User | null> => {
 	try {
 		const currentAccount = await account.get();
 
-		if (!currentAccount) throw Error;
+		if (!currentAccount) {
+			console.log('No current account available');
+			return null;
+		}
 
 		const currentUser = await databases.listDocuments(
 			config.databaseId,
@@ -116,10 +123,17 @@ const getCurrentUser = async () => {
 			[Query.equal('accountId', currentAccount.$id)]
 		);
 
-		if (!currentUser) throw Error;
+		if (currentUser.documents.length === 0) {
+			console.log('No user found in database.');
+			return null;
+		}
 
-		return currentUser.documents[0];
-	} catch (error) {}
+		return currentUser.documents[0] as unknown as User;
+		// return currentAccount;
+	} catch (error: any) {
+		console.log('Error getting current user: ', error);
+		return null;
+	}
 };
 
 export { createUser, signIn, getCurrentUser };

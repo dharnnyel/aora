@@ -35,8 +35,9 @@ declare type FormState = {
 };
 
 declare type User = {
+	$id: string;
 	accountId: string;
 	email: string;
-	username: string;
-	avatar: string;
+	username?: string;
+	avatar?: string;
 };
