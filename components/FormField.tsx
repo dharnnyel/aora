@@ -1,12 +1,11 @@
-import { View, Text } from 'react-native';
 import React, { useState } from 'react';
 import {
-	StyledImage,
-	StyledText,
-	StyledTextInput,
-	StyledTouchableOpacity,
-	StyledView,
-} from '@/StyledComponents';
+	Image,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
+} from 'react-native';
 import { icons } from '@/constants';
 
 const FormField = ({
@@ -20,12 +19,12 @@ const FormField = ({
 	const [showPassword, setShowPassword] = useState(false);
 
 	return (
-		<StyledView className={`space-y-2 ${otherStyles}`}>
-			<StyledText className='text-base text-gray-100 font-popmedium'>
+		<View className={`space-y-2 ${otherStyles}`}>
+			<Text className='text-base text-gray-100 font-popmedium'>
 				{title}
-			</StyledText>
-			<StyledView className='flex-row w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 focus:border-secondary-100 items-center'>
-				<StyledTextInput
+			</Text>
+			<View className='flex-row w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 focus:border-secondary-100 items-center'>
+				<TextInput
 					className='flex-1 w-full text-white font-popsemibold text-base'
 					value={value}
 					placeholder={placeholder}
@@ -36,20 +35,20 @@ const FormField = ({
 					}
 				/>
 				{title === 'Password' && (
-					<StyledTouchableOpacity
+					<TouchableOpacity
 						onPress={() => setShowPassword(!showPassword)}
 					>
-						<StyledImage
+						<Image
 							source={
 								!showPassword ? icons.eye : icons.eyeHide
 							}
 							resizeMode='contain'
 							className='w-6 h-6'
 						/>
-					</StyledTouchableOpacity>
+					</TouchableOpacity>
 				)}
-			</StyledView>
-		</StyledView>
+			</View>
+		</View>
 	);
 };
 

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import {
-	StyledSafeAreaView,
-	StyledScrollView,
-	StyledText,
-	StyledView,
-} from '@/StyledComponents';
 import { Button, FormField, Logo } from '@/components';
 import { Link, router } from 'expo-router';
 import { createUser } from '@/lib/appwrite';
-import { Alert } from 'react-native';
+import {
+	Alert,
+	ScrollView,
+	Text,
+	View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Props = {};
 
@@ -42,15 +42,15 @@ const SignUp = (props: Props) => {
 	};
 
 	return (
-		<StyledSafeAreaView className='bg-primary h-full'>
-			<StyledScrollView>
-				<StyledView className='w-full justify-center h-[85vh] px-4 my-6'>
+		<SafeAreaView className='bg-primary h-full'>
+			<ScrollView>
+				<View className='w-full justify-center h-[85vh] px-4 my-6'>
 					<Logo />
 
-					<StyledView className='mt-4'>
-						<StyledText className='text-white font-popsemibold text-3xl'>
+					<View className='mt-4'>
+						<Text className='text-white font-popsemibold text-3xl'>
 							Sign Up
-						</StyledText>
+						</Text>
 
 						<FormField
 							title='Username'
@@ -82,9 +82,9 @@ const SignUp = (props: Props) => {
 							otherStyles='mt-7'
 						/>
 
-						{/* <StyledText className='text-gray-100 text-right mt-3 font-popregular text-sm'>
+						{/* <Text className='text-gray-100 text-right mt-3 font-popregular text-sm'>
 							Forgot password
-						</StyledText> */}
+						</Text> */}
 
 						<Button
 							title='Sign Up'
@@ -93,7 +93,7 @@ const SignUp = (props: Props) => {
 							isLoading={isSubmitting}
 						/>
 
-						<StyledText className='text-gray-100 text-sm font-popregular text-center'>
+						<Text className='text-gray-100 text-sm font-popregular text-center'>
 							Already have an account?{' '}
 							<Link
 								href='/sign-in'
@@ -101,11 +101,11 @@ const SignUp = (props: Props) => {
 							>
 								Login
 							</Link>
-						</StyledText>
-					</StyledView>
-				</StyledView>
-			</StyledScrollView>
-		</StyledSafeAreaView>
+						</Text>
+					</View>
+				</View>
+			</ScrollView>
+		</SafeAreaView>
 	);
 };
 

@@ -1,9 +1,5 @@
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
-import {
-	StyledText,
-	StyledTouchableOpacity,
-} from '@/StyledComponents';
 
 const Button = ({
 	title,
@@ -13,7 +9,7 @@ const Button = ({
 	textStyles,
 }: ButtonProps) => {
 	return (
-		<StyledTouchableOpacity
+		<TouchableOpacity
 			className={`bg-secondary rounded-xl min-h-[62px] justify-center items-center ${containerStyles} ${
 				isLoading ? 'opacity-50' : ''
 			}`}
@@ -21,12 +17,12 @@ const Button = ({
 			activeOpacity={0.7}
 			disabled={isLoading}
 		>
-			<StyledText
+			<Text
 				className={`text-primary font-popsemibold text-lg ${textStyles}`}
 			>
 				{title}
-			</StyledText>
-		</StyledTouchableOpacity>
+			</Text>
+		</TouchableOpacity>
 	);
 };
 

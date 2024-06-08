@@ -4,7 +4,6 @@ import {
 	Image,
 	ListRenderItem,
 	RefreshControl,
-	SafeAreaView,
 	Text,
 	View,
 } from 'react-native';
@@ -15,6 +14,7 @@ import Trending from '@/components/Trending';
 import { images } from '@/constants';
 import useAppwrite from '@/lib/useAppwrite';
 import { getAllPosts } from '@/lib/appwrite';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Props = {};
 
@@ -22,7 +22,7 @@ const Item = ({ data }: { data: VideoDocument }) => {
 	return (
 		<Text
 			key={data.$id}
-			className='text-white py-10'
+			className='text-white text-xl'
 		>
 			{data.title}
 		</Text>
