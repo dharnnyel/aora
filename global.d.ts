@@ -28,6 +28,42 @@ declare type FormFieldProps = {
 	placeholderTextColor?: string;
 };
 
+declare type SearchInputProps = {
+	title: string;
+	value: string;
+	handleChangeText: (evt: string) => void;
+	otherStyles?: string;
+	keyboardType?: 'email-address' | 'password';
+	placeholder?: string;
+	placeholderTextColor?: string;
+};
+
+declare type VideoDocument = {
+  $collectionId?: string;
+  $createdAt?: string;
+  $databaseId?: string;
+  $permissions?: any[];
+  $tenant?: string;
+  $updatedAt?: string;
+  creator?: object;
+  $id: string;
+  prompt: string;
+  thumbnail: string;
+  title: string;
+  video: string;
+}
+
+declare type Post = {
+	title: string;
+	prompt: string;
+	thumbnail: string;
+	video: string;
+};
+
+declare type TrendingVideosProps = {
+	posts: VideoDocument[];
+};
+
 declare type FormState = {
 	email: string;
 	password: string;
@@ -41,3 +77,5 @@ declare type User = {
 	username?: string;
 	avatar?: string;
 };
+
+declare type FetchFunction<T> = () => Promise<T[]>;

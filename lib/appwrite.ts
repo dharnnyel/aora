@@ -1,6 +1,5 @@
 import {
 	Account,
-	AppwriteException,
 	Avatars,
 	Client,
 	Databases,
@@ -30,12 +29,22 @@ export const config = {
 	storageId: '6654922a002056efd331',
 };
 
+const {
+	endpoint,
+	platform,
+	projectId,
+	databaseId,
+	usersCollectionId,
+	videosCollectionId,
+	storageId,
+} = config;
+
 const client = new Client();
 
 client
-	.setEndpoint(config.endpoint)
-	.setProject(config.projectId)
-	.setPlatform(config.platform);
+	.setEndpoint(endpoint)
+	.setProject(projectId)
+	.setPlatform(platform);
 
 export const account = new Account(client);
 const avatars = new Avatars(client);
@@ -47,16 +56,12 @@ const createUser = async (
 	try {
 		const { email, password, username } = form;
 
-		console.log('Creating new Account');
-
 		const newAccount = await account.create(
 			ID.unique(),
 			email.trim(),
 			password,
 			username?.trim()
 		);
-
-		console.log('New Account created');
 
 		if (!newAccount)
 			throw new Error('Account Creation failed');
@@ -65,13 +70,11 @@ const createUser = async (
 			.getInitials(username)
 			.toString();
 
-		console.log('Signing in new user...');
 		await signIn(form);
-		console.log('User signed in');
 
 		const newUser = await databases.createDocument(
-			config.databaseId,
-			config.usersCollectionId,
+			databaseId,
+			usersCollectionId,
 			ID.unique(),
 			{
 				accountId: newAccount.$id,
@@ -81,7 +84,6 @@ const createUser = async (
 			}
 		);
 
-		console.log('New user document created:', newUser);
 		return {
 			$id: newUser.$id,
 			accountId: newAccount.$id,
@@ -99,7 +101,7 @@ const signIn = async (formData: FormState) => {
 	try {
 		const session =
 			await account.createEmailPasswordSession(
-				formData.email,
+				formData.email.trim(),
 				formData.password
 			);
 		return session;
@@ -118,8 +120,8 @@ const getCurrentUser = async (): Promise<User | null> => {
 		}
 
 		const currentUser = await databases.listDocuments(
-			config.databaseId,
-			config.usersCollectionId,
+			databaseId,
+			usersCollectionId,
 			[Query.equal('accountId', currentAccount.$id)]
 		);
 
@@ -133,6 +135,30 @@ const getCurrentUser = async (): Promise<User | null> => {
 	} catch (error: any) {
 		console.log('Error getting current user: ', error);
 		return null;
+	}
+};
+
+export const getAllPosts: FetchFunction<
+	VideoDocument
+> = async () => {
+	try {
+		const posts = await databases.listDocuments(
+			databaseId,
+			videosCollectionId
+		);
+
+		const mappedPosts: VideoDocument[] =
+			posts.documents.map(post => ({
+				$id: post.$id,
+				prompt: post.prompt,
+				thumbnail: post.thumbnail,
+				title: post.title,
+				video: post.video,
+			}));
+
+		return mappedPosts;
+	} catch (error: any) {
+		throw new Error(error.message);
 	}
 };
 
