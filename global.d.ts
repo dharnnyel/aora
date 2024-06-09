@@ -38,20 +38,28 @@ declare type SearchInputProps = {
 	placeholderTextColor?: string;
 };
 
+declare type Creator = {
+	$collectionId: string;
+	$createdAt: string;
+	$databaseId: string;
+	$id: string;
+	$permissions: string[];
+	$tenant: string;
+	$updatedAt: string;
+	accountId: string;
+	avatar: string;
+	email: string;
+	username: string;
+};
+
 declare type VideoDocument = {
-  $collectionId?: string;
-  $createdAt?: string;
-  $databaseId?: string;
-  $permissions?: any[];
-  $tenant?: string;
-  $updatedAt?: string;
-  creator?: object;
-  $id: string;
-  prompt: string;
-  thumbnail: string;
-  title: string;
-  video: string;
-}
+	$id: string;
+	creator: Creator;
+	prompt: string;
+	thumbnail: string;
+	title: string;
+	video: string;
+};
 
 declare type Post = {
 	title: string;

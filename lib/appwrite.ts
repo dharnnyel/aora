@@ -150,6 +150,33 @@ export const getAllPosts: FetchFunction<
 		const mappedPosts: VideoDocument[] =
 			posts.documents.map(post => ({
 				$id: post.$id,
+				creator: post.creator,
+				prompt: post.prompt,
+				thumbnail: post.thumbnail,
+				title: post.title,
+				video: post.video,
+			}));
+
+		return mappedPosts;
+	} catch (error: any) {
+		throw new Error(error.message);
+	}
+};
+
+export const getLatestPosts: FetchFunction<
+	VideoDocument
+> = async () => {
+	try {
+		const posts = await databases.listDocuments(
+			databaseId,
+			videosCollectionId,
+			[Query.orderDesc('$createdAt'), Query.limit(7)]
+		);
+
+		const mappedPosts: VideoDocument[] =
+			posts.documents.map(post => ({
+				$id: post.$id,
+				creator: post.creator,
 				prompt: post.prompt,
 				thumbnail: post.thumbnail,
 				title: post.title,

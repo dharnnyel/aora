@@ -15,17 +15,13 @@ import { images } from '@/constants';
 import useAppwrite from '@/lib/useAppwrite';
 import { getAllPosts } from '@/lib/appwrite';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import VideoCard from '@/components/VideoCard';
 
 type Props = {};
 
 const Item = ({ data }: { data: VideoDocument }) => {
 	return (
-		<Text
-			key={data.$id}
-			className='text-white text-xl'
-		>
-			{data.title}
-		</Text>
+		<VideoCard video={data} />
 	);
 };
 
