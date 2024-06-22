@@ -54,7 +54,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
 			</View>
 
 			{play ? (
-				<Text className='text-white'>Playing</Text>
+				<Text className='text-wi'>Playing</Text>
 			) : (
 				<TouchableOpacity
 					activeOpacity={0.7}

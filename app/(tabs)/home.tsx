@@ -13,16 +13,17 @@ import EmptyState from '@/components/EmptyState';
 import Trending from '@/components/Trending';
 import { images } from '@/constants';
 import useAppwrite from '@/lib/useAppwrite';
-import { getAllPosts } from '@/lib/appwrite';
+import {
+	getAllPosts,
+	getLatestPosts,
+} from '@/lib/appwrite';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import VideoCard from '@/components/VideoCard';
 
 type Props = {};
 
 const Item = ({ data }: { data: VideoDocument }) => {
-	return (
-		<VideoCard video={data} />
-	);
+	return <VideoCard video={data} />;
 };
 
 const Home = (props: Props) => {
@@ -31,6 +32,9 @@ const Home = (props: Props) => {
 		isLoading,
 		refetch,
 	} = useAppwrite<VideoDocument>(getAllPosts);
+
+	const { data: latestPosts } =
+		useAppwrite<VideoDocument>(getLatestPosts);
 
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -94,7 +98,7 @@ const Home = (props: Props) => {
 								Trending Videos
 							</Text>
 
-							<Trending posts={posts ?? []} />
+							<Trending posts={latestPosts ?? []} />
 						</View>
 					</View>
 				)}
